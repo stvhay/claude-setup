@@ -277,12 +277,22 @@ Use depict notation for control structure diagrams. Depict is purpose-built for 
 | Concept | Depict Syntax | Example |
 |---------|---------------|---------|
 | Vertical hierarchy | Names on separate lines | `supervisor`<br>`operator`<br>`process` |
+| Horizontal layout | End with `-` | `sensor_a sensor_b sensor_c -` |
 | Control action (↓) | `controller process: action` | `pilot aircraft: pitch_cmd` |
 | Feedback (↑) | `controller process: / feedback` | `aircraft pilot: / altitude` |
 | Bidirectional | `a b: action / feedback` | `operator system: start / status` |
 | Multiple labels | Comma-separated | `ctrl proc: open, close, stop` |
 | Nesting/composition | `parent [ child ]` | `cockpit [ pilot copilot ]` |
+| Placeholder | `_` (underscore) | `ctrl _ proc` (skip middle) |
 | Highlighting | `@red` suffix | `ctrl proc: unsafe_action @red` |
+| Line separator | `;` (semicolon) | `a; b; c` (same as newlines) |
+
+### Naming
+
+Names can include hyphens, asterisks, parentheses, and angle brackets for clarity:
+- `primary-controller`, `backup-controller`
+- `sensor(failed)`, `valve<open>`
+- `process*` (asterisk for annotation)
 
 ### Example: Microwave Control Structure
 
@@ -296,6 +306,15 @@ This says:
 - `microwave` controls `food` (heat)
 - `person` also directly interacts with `food` (eat)
 
+### Example: Redundant Sensors (Horizontal)
+
+```
+controller
+sensor_a sensor_b sensor_c -
+process
+controller sensor_a: / reading; controller sensor_b: / reading; controller sensor_c: / reading
+```
+
 ### STPA Mapping
 
 | STAMP Concept | Depict Element |
@@ -305,6 +324,7 @@ This says:
 | Control action | Downward arrow (`:`) |
 | Feedback | Upward arrow (`/`) |
 | Hierarchy level | Vertical position |
+| Horizontal peers | `-` suffix |
 | Subsystem | Nesting `[ ]` |
 | Unsafe path | `@red` highlighting |
 

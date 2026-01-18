@@ -299,12 +299,22 @@ Use depict notation for control structure diagrams. Depict is purpose-built for 
 | Concept | Depict Syntax | Example |
 |---------|---------------|---------|
 | Vertical hierarchy | Names on separate lines | `cloud_mgmt`<br>`api_gateway`<br>`backend` |
+| Horizontal layout | End with `-` | `svc_a svc_b svc_c -` |
 | Control action (↓) | `controller process: action` | `admin server: deploy_config` |
 | Feedback (↑) | `controller process: / feedback` | `server admin: / health_status` |
 | Bidirectional | `a b: action / feedback` | `client api: request / response` |
 | Multiple labels | Comma-separated | `mgmt system: auth, provision, revoke` |
 | Nesting/composition | `parent [ child ]` | `dmz [ web_server api_gateway ]` |
+| Placeholder | `_` (underscore) | `external _ backend` (skip middle) |
 | Vulnerable path | `@red` suffix | `external api: query @red` |
+| Line separator | `;` (semicolon) | `a; b; c` (same as newlines) |
+
+### Naming
+
+Names can include hyphens, asterisks, parentheses, and angle brackets for clarity:
+- `auth-service`, `api-gateway`
+- `endpoint(exposed)`, `port<443>`
+- `service*` (asterisk for annotation)
 
 ### Example: API Security Control Structure
 
@@ -315,11 +325,27 @@ api_gateway backend: validated_request / response
 external api_gateway: request @red / data
 ```
 
+### Example: Microservices Attack Surface
+
+```
+external
+load_balancer
+svc_a svc_b svc_c -
+database
+external load_balancer: request @red
+load_balancer svc_a: route; load_balancer svc_b: route; load_balancer svc_c: route
+svc_a database: query; svc_b database: query @red; svc_c database: query
+```
+
+Shows horizontal microservices with one vulnerable database path.
+
 ### STPA-Sec Specific Usage
 
 - Use `@red` to highlight attack surfaces (paths crossing trust boundaries)
-- Nesting `[ ]` can represent security domains (DMZ, internal, external)
+- Nesting `[ ]` represents security domains (DMZ, internal, external)
+- Use horizontal `-` for parallel services, redundant paths, or distributed components
 - Label feedback paths that could be spoofed or tampered
+- Use `(state)` or `<port>` in names to annotate security-relevant details
 
 ### Limitations
 

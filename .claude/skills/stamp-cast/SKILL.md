@@ -332,12 +332,22 @@ Use depict notation for control structure diagrams. Depict is purpose-built for 
 | Concept | Depict Syntax | Example |
 |---------|---------------|---------|
 | Vertical hierarchy | Names on separate lines | `regulator`<br>`company`<br>`operator` |
+| Horizontal layout | End with `-` | `team_a team_b team_c -` |
 | Control action (↓) | `controller process: action` | `manager operator: assign_task` |
 | Feedback (↑) | `controller process: / feedback` | `operator manager: / status_report` |
 | Bidirectional | `a b: action / feedback` | `supervisor team: directive / report` |
 | Multiple labels | Comma-separated | `mgmt ops: policy, budget, staffing` |
 | Nesting/composition | `parent [ child ]` | `organization [ management operations ]` |
+| Placeholder | `_` (underscore) | `regulator _ operator` (skip middle) |
 | Flawed interaction | `@red` suffix | `operator process: missed_check @red` |
+| Line separator | `;` (semicolon) | `a; b; c` (same as newlines) |
+
+### Naming
+
+Names can include hyphens, asterisks, parentheses, and angle brackets for clarity:
+- `shift-supervisor`, `night-operator`
+- `valve(stuck)`, `sensor<failed>`
+- `controller*` (asterisk for annotation)
 
 ### Example: Incident Control Structure
 
@@ -348,11 +358,24 @@ management operations: procedures, resources / incident_reports
 operations equipment: operate / sensor_data
 ```
 
+### Example: Multi-Team Coordination Failure
+
+```
+management
+team_a team_b team_c -
+process
+team_a team_b: handoff @red; team_b team_c: handoff @red
+```
+
+Shows parallel teams with failed lateral coordination.
+
 ### CAST-Specific Usage
 
 - Use `@red` to highlight control paths that failed during the incident
 - Show hierarchical levels (regulatory → organizational → operational → physical)
 - Include feedback paths that were missing, delayed, or ignored
+- Use horizontal `-` for parallel actors at same level (shifts, teams, redundant systems)
+- Use `(state)` or `<condition>` in names to show component state at incident time
 
 ### Limitations
 
