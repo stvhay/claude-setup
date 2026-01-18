@@ -137,3 +137,19 @@ From 24 failure memories:
 Run the command. Read the output. THEN claim the result.
 
 This is non-negotiable.
+
+## Integration with Code Simplification
+
+After verification passes, the code-simplification skill runs automatically:
+
+```
+verify (this skill) → simplify → re-verify → complete
+```
+
+The simplification skill will:
+- Apply low-risk changes automatically
+- Flag structural changes for approval
+- Analyze failures for deeper issues
+- Re-run verification after changes
+
+Only after simplification completes and final verification passes can completion be claimed.
