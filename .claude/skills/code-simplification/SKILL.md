@@ -131,3 +131,53 @@ Low-risk first because:
 - Banks easy wins before attempting riskier changes
 - Simpler changes are less likely to reveal deep issues
 - If a consolidation fails, low-risk changes are already applied
+
+## Output Format
+
+Present results in this structure:
+
+```
+## Simplification Complete
+
+Applied N changes, blocked N, skipped N, N opportunities, N escalations.
+
+### Applied
+- [One-liner per low-moderate change]
+
+### Applied (consolidation) [commit: hash]
+- **[Title]** (file.ts)
+  - Before: [What existed]
+  - After: [What it became]
+  - Scope: [Files touched, lines changed]
+  - Impact: [Call sites affected]
+  - Confidence: [High/Medium/Low with reason]
+
+### Blocked
+- **[Title]** (file.ts)
+  - Attempted: [What was tried]
+  - Failure: [What went wrong]
+  - Analysis: [Root cause found]
+  - Action taken: [Reverted, flagged X]
+  - Recommendation: [Next steps]
+
+### Skipped
+- [Change]: [Why it was skipped]
+
+### Opportunities (require approval)
+- **Structural:** [Description of potential change]
+
+### Escalations
+- **[Issue type] in [location]**: [Description and recommended action]
+```
+
+### Summary Levels
+
+**One-liner (Low-Moderate):**
+Action + target + location. Example: "Removed unused `formatTimestamp` import (utils/date.ts)"
+
+**Detailed (Consolidation, Blocked):**
+- Before/after description
+- Scope (files, lines)
+- Impact (call sites affected)
+- Confidence level with reasoning
+- For blocked: attempted action, failure, analysis, recommendation
