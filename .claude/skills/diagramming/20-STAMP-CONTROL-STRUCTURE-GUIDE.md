@@ -376,4 +376,29 @@ Avoid using `dir=both` — separate edges are clearer for STAMP analysis.
 
 ## Validation Checklist
 
-[Content in Task 6]
+Before returning a STAMP diagram, verify:
+
+### Syntax
+- [ ] Valid DOT syntax (no unclosed braces, quotes, brackets)
+- [ ] All node IDs are valid (alphanumeric, underscores)
+- [ ] All attributes use correct DOT syntax (`key=value` or `key="value"`)
+
+### Layout
+- [ ] `rankdir` matches diagram type (TB for control/routing, LR for causal)
+- [ ] `rank=same` used for horizontal peers
+- [ ] `cluster_` prefix on all subgraphs that need borders
+
+### Semantic Styling
+- [ ] Controllers use `box` (human) or `box style=rounded` (automated)
+- [ ] Processes use `ellipse`
+- [ ] Control actions are solid arrows (downward in TB layout)
+- [ ] Feedback paths use `style=dashed` (upward in TB layout)
+- [ ] Failed/flawed paths use `color=red penwidth=2`
+- [ ] Hazards use `octagon` with `lightcoral` fill
+- [ ] Losses use `doubleoctagon` with `red` fill and `white` text
+
+### STAMP Semantics
+- [ ] Hierarchy reflects authority (higher = more control authority)
+- [ ] All feedback paths shown (even if missing/failed — mark with red)
+- [ ] Control actions labeled with what is controlled
+- [ ] Feedback labeled with what information flows back
