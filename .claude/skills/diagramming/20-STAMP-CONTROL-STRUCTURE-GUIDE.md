@@ -268,7 +268,111 @@ digraph multi_uca {
 
 ## Common Patterns
 
-[Content in Task 5]
+### Horizontal Peers
+
+Use `rank=same` for parallel controllers at the same authority level:
+
+```dot
+digraph peers {
+    rankdir=TB;
+
+    management [shape=box label="Management"];
+
+    // Force same rank
+    {rank=same; team_a; team_b; team_c}
+    team_a [shape=box label="Team A"];
+    team_b [shape=box label="Team B"];
+    team_c [shape=box label="Team C"];
+
+    process [shape=ellipse label="Process"];
+
+    management -> team_a;
+    management -> team_b;
+    management -> team_c;
+    team_a -> process;
+    team_b -> process;
+    team_c -> process;
+
+    // Lateral coordination
+    team_a -> team_b [style=dotted label="handoff" constraint=false];
+    team_b -> team_c [style=dotted label="handoff" constraint=false];
+}
+```
+
+### Nested Subsystems
+
+Use `subgraph cluster_` for organizational boundaries:
+
+```dot
+digraph nested {
+    rankdir=TB;
+
+    subgraph cluster_org {
+        label="Organization";
+        style=rounded;
+
+        subgraph cluster_mgmt {
+            label="Management";
+            style=dashed;
+            exec [shape=box label="Executive"];
+            ops_mgr [shape=box label="Ops Manager"];
+        }
+
+        subgraph cluster_field {
+            label="Field";
+            style=dashed;
+            supervisor [shape=box label="Supervisor"];
+            operator [shape=box label="Operator"];
+        }
+    }
+
+    process [shape=ellipse label="Process"];
+
+    exec -> ops_mgr;
+    ops_mgr -> supervisor;
+    supervisor -> operator;
+    operator -> process;
+}
+```
+
+### Highlighting Failures
+
+Use red color and increased pen width for failed control paths:
+
+```dot
+digraph failure {
+    rankdir=TB;
+
+    controller [shape=box label="Controller"];
+    process [shape=ellipse label="Process"];
+
+    // Normal path
+    controller -> process [label="command"];
+
+    // Failed feedback (highlighted)
+    process -> controller [style=dashed color=red penwidth=2
+                          label="sensor\n(FAILED)" fontcolor=red];
+}
+```
+
+### Bidirectional Control/Feedback
+
+Show both directions on separate edges for clarity:
+
+```dot
+digraph bidirectional {
+    rankdir=TB;
+
+    operator [shape=box label="Operator"];
+    system [shape=box style=rounded label="System"];
+
+    // Separate edges, not bidirectional arrow
+    operator -> system [label="commands"];
+    system -> operator [style=dashed label="status"];
+}
+```
+
+Avoid using `dir=both` — separate edges are clearer for STAMP analysis.
 
 ## Validation Checklist
 
