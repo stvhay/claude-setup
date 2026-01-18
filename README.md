@@ -25,3 +25,9 @@ universal best practices.
 ## Using this
 
 Clone it, steal from it, ignore it. The skills live in `.claude/skills/`.
+
+## License
+
+MIT License. See [LICENSE](LICENSE).
+
+Portions derived from [obra/superpowers](https://github.com/obra/superpowers) under MIT License. See [LICENSE.superpowers](LICENSE.superpowers).
