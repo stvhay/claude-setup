@@ -27,3 +27,48 @@ develop → verify (tests pass) → simplify → re-verify → complete
 - No new features added
 - Prefer deletion over modification
 - Tests must pass after each change
+
+## Pattern Categories
+
+Simplifications are categorized by risk. Lower risk = more autonomy.
+
+| Category | Risk | Behavior | Summary |
+|----------|------|----------|---------|
+| Deletion | Low | Auto-apply | One-liner |
+| Flattening | Low-Moderate | Auto-apply | One-liner |
+| Derivation | Moderate | Auto-apply | One-liner |
+| Consolidation | Moderate-High | Auto-apply, atomic commit | Detailed |
+| Structural | High | Flag for approval only | Detailed |
+
+### Deletion (Low Risk)
+
+- Dead code (functions/variables never called)
+- Unused imports
+- Unreachable branches
+- Commented-out code
+
+### Flattening (Low-Moderate Risk)
+
+- Unnecessary wrapper functions/components
+- Redundant abstraction layers
+- Over-nested conditionals (flatten with early returns)
+- Pointless indirection (A calls B which just calls C)
+
+### Derivation (Moderate Risk)
+
+- Stored values that should be computed (derived state)
+- Redundant state synchronized manually
+- Cached data easily derivable from source of truth
+
+### Consolidation (Moderate-High Risk)
+
+- Semantic duplicates (same intent, different implementation)
+- Copy-paste variations with minor differences
+- Functions that could be unified with a parameter
+
+### Structural (High Risk - Flag Only)
+
+- Interface changes
+- Abstraction redesign
+- Architectural simplifications
+- Changes affecting multiple modules
