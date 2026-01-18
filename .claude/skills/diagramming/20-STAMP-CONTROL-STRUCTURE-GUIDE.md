@@ -127,7 +127,56 @@ digraph control_structure {
 
 ## Routing/Decision Diagrams
 
-[Content in Task 3]
+Methodology selection flowcharts for choosing between STPA, CAST, and STPA-Sec.
+
+### Conventions
+
+**Layout:** `rankdir=TB` (top-to-bottom flow)
+
+**Node Shapes:**
+
+| Concept | DOT Shape | Attributes |
+|---------|-----------|------------|
+| Entry point | `ellipse` | `shape=ellipse` |
+| Decision | `diamond` | `shape=diamond` |
+| Outcome | `box` | `shape=box style=filled fillcolor=<color>` |
+
+**Outcome Colors:**
+
+| Route | Fill Color | Meaning |
+|-------|------------|---------|
+| STPA | `lightgreen` | Prospective analysis |
+| CAST | `lightgray` | Retrospective analysis |
+| STPA-Sec | `lightblue` | Security analysis |
+
+### Example: Methodology Router
+
+```dot
+digraph routing {
+    rankdir=TB;
+    node [fontname="Arial" fontsize=10];
+    edge [fontname="Arial" fontsize=9];
+
+    // Entry
+    entry [shape=ellipse label="Safety/failure\nconcern raised"];
+
+    // Decisions
+    timing [shape=diamond label="Has loss already\noccurred?"];
+    security [shape=diamond label="Adversarial\nthreat?"];
+
+    // Outcomes
+    cast [shape=box style=filled fillcolor=lightgray label="Use CAST\n(retrospective)"];
+    stpa [shape=box style=filled fillcolor=lightgreen label="Use STPA\n(prospective)"];
+    stpasec [shape=box style=filled fillcolor=lightblue label="Use STPA-Sec\n(security)"];
+
+    // Flow
+    entry -> timing;
+    timing -> cast [label="yes"];
+    timing -> security [label="no"];
+    security -> stpasec [label="yes"];
+    security -> stpa [label="no"];
+}
+```
 
 ## Causal Scenario Diagrams
 
