@@ -73,6 +73,13 @@ See [references/stamp-foundations.md](references/stamp-foundations.md) for:
 - Why "human error" is the wrong terminus
 - Migration to hazard
 
+## Training & Onboarding
+
+For users new to STAMP, see [references/training-intro.md](references/training-intro.md):
+- Mapping STAMP to familiar concepts (fault trees, control loops)
+- Quick paths for different user contexts (safety, incident response, compliance)
+- Handling resistance and common objections
+
 ## Quick Reference
 
 | Traditional Framing | STAMP Reframing |
@@ -88,6 +95,14 @@ See [references/stamp-foundations.md](references/stamp-foundations.md) for:
 2. Control actions available (authority + means)
 3. Process model accurate (controller understands reality)
 4. Feedback adequate (timely, accurate information)
+
+## Output Formats
+
+STAMP analysis serves different audiences. See [references/output-formats.md](references/output-formats.md) for:
+- **Executive Summary** — Decision-focused, business impact
+- **Engineering Specification** — Actionable requirements with traceability
+- **Incident Report** — Compliance-ready, methodology-documented
+- **Quick Brief** — Verbal settings, alignment conversations
 
 ## Related Skills
 
