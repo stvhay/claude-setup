@@ -13,8 +13,19 @@ built=0
 skipped=0
 orphans=0
 
+# Colors (disabled if not a terminal)
+if [[ -t 1 ]]; then
+    GREEN=$'\033[0;32m'
+    YELLOW=$'\033[0;33m'
+    RED=$'\033[0;31m'
+    BOLD=$'\033[1m'
+    RESET=$'\033[0m'
+else
+    GREEN='' YELLOW='' RED='' BOLD='' RESET=''
+fi
+
 die() {
-    printf '%s\n' "$*" >&2
+    printf "${RED}✗ %s${RESET}\n" "$*" >&2
     exit 1
 }
 
@@ -79,7 +90,7 @@ build_skill() {
     stored_hash=$(get_stored_hash "$skill_name")
 
     if [[ "$current_hash" == "$stored_hash" ]] && [[ -f "$output_file" ]]; then
-        printf 'Skipped: %s (unchanged)\n' "$skill_name"
+        printf "${YELLOW}○ Skipped:${RESET} %s (unchanged)\n" "$skill_name"
         ((skipped++)) || true
         return
     fi
@@ -88,7 +99,7 @@ build_skill() {
     (cd "$skill_dir" && zip -qr - .) > "$output_file"
     update_hash "$skill_name" "$current_hash"
 
-    printf 'Built: %s\n' "$skill_name"
+    printf "${GREEN}✓ Built:${RESET} %s\n" "$skill_name"
     ((built++)) || true
 }
 
@@ -105,11 +116,12 @@ check_orphans() {
 
         if [[ ! -d "$SKILLS_DIR/$skill_name" ]]; then
             ((orphans++)) || true
-            read -rp "Orphaned: ${skill_name}.skill - delete? [y/N] " answer
+            printf "${RED}⚠ Orphaned:${RESET} ${skill_name}.skill - "
+            read -rp "delete? [y/N] " answer
             if [[ "$answer" =~ ^[Yy]$ ]]; then
                 rm "$skill_file"
                 remove_hash "$skill_name"
-                printf 'Deleted: %s.skill\n' "$skill_name"
+                printf "${RED}✗ Deleted:${RESET} %s.skill\n" "$skill_name"
             fi
         fi
     done
@@ -146,7 +158,7 @@ main() {
     check_orphans
 
     # Print summary
-    printf '\nBuilt: %d, Skipped: %d, Orphans: %d\n' "$built" "$skipped" "$orphans"
+    printf "\n${BOLD}Summary:${RESET} ${GREEN}%d built${RESET}, ${YELLOW}%d skipped${RESET}, ${RED}%d orphans${RESET}\n" "$built" "$skipped" "$orphans"
 }
 
 main "$@"
