@@ -30,4 +30,9 @@ Clone it, steal from it, ignore it. The skills live in `.claude/skills/`.
 
 MIT License. See [LICENSE](LICENSE).
 
-Portions derived from [obra/superpowers](https://github.com/obra/superpowers) under MIT License. See [LICENSE.superpowers](LICENSE.superpowers).
+Portions derived from:
+- [obra/superpowers](https://github.com/obra/superpowers) - MIT. See [LICENSE.superpowers](LICENSE.superpowers).
+- [tEhThing/claude-skills-diagramming](https://github.com/tEhThing/claude-skills-diagramming) - MIT. See [LICENSE.diagramming](LICENSE.diagramming).
+- [kepano/obsidian-skills](https://github.com/kepano/obsidian-skills) - MIT. See [LICENSE.obsidian-skills](LICENSE.obsidian-skills).
+- [content-designer/ux-writing-skill](https://github.com/content-designer/ux-writing-skill) - MIT. See [LICENSE.ux-writing](LICENSE.ux-writing).
+- [0xquinto/bcherny-claude](https://github.com/0xquinto/bcherny-claude) - See [LICENSE.bcherny-claude](LICENSE.bcherny-claude).
