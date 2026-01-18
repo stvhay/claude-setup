@@ -89,17 +89,31 @@ This buys time without premature blame or false precision.
 
 ### Framing Conflicts
 
-When users bring traditional investigation framing, surface the tension:
+When users bring traditional investigation framing, acknowledge their need, then offer CAST's stronger path:
 
 | User Says | Response Pattern |
 |-----------|------------------|
-| "What was the root cause?" | "CAST rejects single root causes—accidents are multifactorial. Want me to map all contributing factors instead?" |
-| "Who's responsible?" / "Who failed?" | "CAST avoids blame—goal is explanation, not accusation. Want me to analyze why actions seemed correct at the time?" |
-| "It was human error" | "CAST treats human error as symptom. What in the system made that action seem reasonable?" |
-| "They should have known better" | "That's hindsight bias. What information did they actually have? What was their mental model?" |
-| "Add more training/procedures" | "Training and procedures are weak fixes. Want me to find control structure changes instead?" |
+| "What was the root cause?" | "I understand—accountability discussions need clear causal chains. Here's the challenge: single root causes rarely hold up under scrutiny. I can give you something stronger: a map of all contributing factors and control gaps. That's more defensible when stakeholders push back. Want to try that?" |
+| "Who's responsible?" / "Who failed?" | "Accountability matters. CAST's approach: understand why actions seemed correct at the time, then identify what system changes would prevent recurrence. That often lands better than naming individuals. Want me to take that angle?" |
+| "It was human error" | "That's often where investigations start. The next question: what in the system made that action seem reasonable? If we can answer that, we get design changes—not just blame. Want me to trace it back?" |
+| "They should have known better" | "That's hindsight talking—we know how it ended. What information did they actually have? What was their mental model? Understanding that reveals where the system failed them." |
+| "Add more training/procedures" | "Training and procedures can help, but they're often the first things to erode under pressure. Want me to look for control structure changes that would make the safe path the easy path?" |
 
-**Don't** silently override the user's framing. Name the conflict, offer the alternative, let them choose.
+**Acknowledge** their legitimate need. **Offer** CAST as enhancement, not correction. **Let them choose**.
+
+### Time Pressure
+
+When incident response or compliance deadline is tight:
+
+| Time Available | Minimum Viable CAST |
+|----------------|---------------------|
+| 1 hour | Event sequence + immediate control structure (paths involved in incident) + preliminary factors |
+| 4 hours | Full control structure + component analysis + top 3 systemic factors + prioritized recommendations |
+| 1 day | Complete CAST with all systemic factors, comprehensive recommendations, and stakeholder-ready report |
+
+> "With [X time], I recommend we focus on [which steps]. That gets you [outcome] without deferring critical findings. Does that work?"
+
+**If still in active response:** "Let's stabilize first. Once the immediate issue is contained, I can help with systemic analysis—that's where we find lasting fixes."
 
 ### Skill Handoffs
 
@@ -284,7 +298,7 @@ CAST analysis produces:
 4. **Systemic Analysis:** Communication, culture, SMS, change management findings
 5. **Recommendations:** Prioritized list with implementation responsibilities
 
-Use the control structure diagram as organizing framework for the report. Color-code or annotate to show which interactions were flawed.
+Use the control structure diagram (in depict notation—see Depict Syntax below) as organizing framework for the report. Use `@red` to highlight flawed interactions.
 
 ## Quick Reference: Questions to Ask
 
@@ -305,3 +319,38 @@ Use the control structure diagram as organizing framework for the report. Color-
 ## Related
 
 **RELATED:** For prospective hazard analysis to prevent future losses (before accidents occur), see stamp-stpa
+
+## Depict Syntax
+
+Use depict notation for control structure diagrams. Depict is purpose-built for STAMP—its semantics match control-theoretic concepts directly.
+
+### Quick Reference
+
+| Concept | Depict Syntax | Example |
+|---------|---------------|---------|
+| Vertical hierarchy | Names on separate lines | `regulator`<br>`company`<br>`operator` |
+| Control action (↓) | `controller process: action` | `manager operator: assign_task` |
+| Feedback (↑) | `controller process: / feedback` | `operator manager: / status_report` |
+| Bidirectional | `a b: action / feedback` | `supervisor team: directive / report` |
+| Multiple labels | Comma-separated | `mgmt ops: policy, budget, staffing` |
+| Nesting/composition | `parent [ child ]` | `organization [ management operations ]` |
+| Flawed interaction | `@red` suffix | `operator process: missed_check @red` |
+
+### Example: Incident Control Structure
+
+```
+regulator company: regulations, audits / compliance_reports
+company [ management operations ]
+management operations: procedures, resources / incident_reports
+operations equipment: operate / sensor_data
+```
+
+### CAST-Specific Usage
+
+- Use `@red` to highlight control paths that failed during the incident
+- Show hierarchical levels (regulatory → organizational → operational → physical)
+- Include feedback paths that were missing, delayed, or ignored
+
+### Limitations
+
+Depict handles **structure**, not **analysis**. Component analysis, mental model flaws, and systemic factors require prose or tables—depict shows the control structure those analyses reference.

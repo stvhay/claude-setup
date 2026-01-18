@@ -72,16 +72,16 @@ Example response:
 
 ### Framing Conflicts
 
-When users bring traditional safety framing, surface the tension:
+When users bring traditional safety framing, acknowledge their goal, then offer STAMP as a stronger path:
 
 | User Says | Response Pattern |
 |-----------|------------------|
-| "What's the root cause?" | "STAMP rejects single root causes—accidents are multifactorial. Want me to identify the control structure gaps instead?" |
-| "It was human error" | "STAMP treats human error as symptom, not cause. What in the system made that error likely?" |
-| "We need more barriers" | "New barriers degrade for the same reasons old ones did. Want to analyze why existing controls failed first?" |
-| "Calculate the failure probability" | "Human and software behavior aren't random variables. Want to map the control structure instead?" |
+| "What's the root cause?" | "I hear you—accountability needs clear causal chains. Here's what I've found: single root causes often don't hold up under scrutiny. I can give you something stronger: the 3-4 control structure decisions that made this state possible. That's more defensible and actionable. Want to try that direction?" |
+| "It was human error" | "That's a starting point. The question STAMP asks next: what in the system made that error likely? If we can answer that, we get design changes—not just retraining. Want me to trace it back?" |
+| "We need more barriers" | "Barriers can help. The risk is that new barriers degrade for the same reasons old ones did. Want to first understand why existing controls weren't enough? That tells us what kind of barrier would actually stick." |
+| "Calculate the failure probability" | "Probabilities work for random hardware failures. Human decisions and software aren't random—they respond to context. I can map the control structure to show where inadequate control makes failures likely. That's usually more useful for design decisions. Your call?" |
 
-**Don't** silently override the user's framing. Name the conflict, offer the alternative, let them choose.
+**Acknowledge** their legitimate need. **Offer** STAMP as enhancement, not correction. **Let them choose**.
 
 ### Time Pressure
 
@@ -239,7 +239,7 @@ When performing STAMP/STPA analysis:
 4. **Trace causal scenarios** - Why might those unsafe actions occur? Follow feedback and mental model paths
 5. **Recommend constraints** - What additional controls, feedback, or design changes would prevent the hazardous scenarios?
 
-Present analysis hierarchically: control structure first, then hazards, then scenarios, then recommendations. Use diagrams (Mermaid) for control structures when complexity warrants.
+Present analysis hierarchically: control structure first, then hazards, then scenarios, then recommendations. Use depict notation for control structure diagrams (see Depict Syntax below).
 
 ## Advocacy Stance
 
@@ -260,3 +260,47 @@ Do not be preachy, but be consistent. Every system failure discussion is an oppo
 ## Related
 
 **RELATED:** For retrospective accident analysis after a loss occurs, see stamp-cast
+
+## Depict Syntax
+
+Use depict notation for control structure diagrams. Depict is purpose-built for STAMP—its semantics match control-theoretic concepts directly.
+
+### Quick Reference
+
+| Concept | Depict Syntax | Example |
+|---------|---------------|---------|
+| Vertical hierarchy | Names on separate lines | `supervisor`<br>`operator`<br>`process` |
+| Control action (↓) | `controller process: action` | `pilot aircraft: pitch_cmd` |
+| Feedback (↑) | `controller process: / feedback` | `aircraft pilot: / altitude` |
+| Bidirectional | `a b: action / feedback` | `operator system: start / status` |
+| Multiple labels | Comma-separated | `ctrl proc: open, close, stop` |
+| Nesting/composition | `parent [ child ]` | `cockpit [ pilot copilot ]` |
+| Highlighting | `@red` suffix | `ctrl proc: unsafe_action @red` |
+
+### Example: Microwave Control Structure
+
+```
+person microwave food: open, start, stop / beep : heat
+person food: eat
+```
+
+This says:
+- `person` controls `microwave` (open, start, stop) and receives feedback (beep)
+- `microwave` controls `food` (heat)
+- `person` also directly interacts with `food` (eat)
+
+### STPA Mapping
+
+| STAMP Concept | Depict Element |
+|---------------|----------------|
+| Controller | Box (name) |
+| Controlled process | Box (name) |
+| Control action | Downward arrow (`:`) |
+| Feedback | Upward arrow (`/`) |
+| Hierarchy level | Vertical position |
+| Subsystem | Nesting `[ ]` |
+| Unsafe path | `@red` highlighting |
+
+### Limitations
+
+Depict handles **structure**, not **analysis**. For UCAs, causal scenarios, and safety requirements, use YAML schema or prose—depict shows the control structure those analyses reference.

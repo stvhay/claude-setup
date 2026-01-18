@@ -69,7 +69,7 @@ When users bring traditional security framing, surface integration opportunities
 | "Calculate attack probability" | "Attacker behavior isn't random. Want to map attack scenarios to control structure vulnerabilities instead?" |
 | "Keep it simple/quick" | "I can do a quick STRIDE pass. But 10 more minutes mapping what your system controls often reveals 2-3 critical scenarios traditional STRIDE misses. Your call—quick or thorough?" |
 
-**Don't** silently override the user's framing. Name the integration opportunity, let them choose.
+**Acknowledge** their approach works. **Offer** STPA-Sec as enhancement, not replacement. **Let them choose**.
 
 ### Time Pressure
 
@@ -288,3 +288,40 @@ Particularly valuable for:
 **RELATED:** For safety-focused prospective analysis without adversarial scenarios, see stamp-stpa
 
 **RELATED:** For retrospective analysis of security incidents, see stamp-cast
+
+## Depict Syntax
+
+Use depict notation for control structure diagrams. Depict is purpose-built for STAMP—its semantics match control-theoretic concepts directly.
+
+### Quick Reference
+
+| Concept | Depict Syntax | Example |
+|---------|---------------|---------|
+| Vertical hierarchy | Names on separate lines | `cloud_mgmt`<br>`api_gateway`<br>`backend` |
+| Control action (↓) | `controller process: action` | `admin server: deploy_config` |
+| Feedback (↑) | `controller process: / feedback` | `server admin: / health_status` |
+| Bidirectional | `a b: action / feedback` | `client api: request / response` |
+| Multiple labels | Comma-separated | `mgmt system: auth, provision, revoke` |
+| Nesting/composition | `parent [ child ]` | `dmz [ web_server api_gateway ]` |
+| Vulnerable path | `@red` suffix | `external api: query @red` |
+
+### Example: API Security Control Structure
+
+```
+admin [ auth_service config_mgmt ]
+auth_service api_gateway: issue_token, revoke / auth_request
+api_gateway backend: validated_request / response
+external api_gateway: request @red / data
+```
+
+### STPA-Sec Specific Usage
+
+- Use `@red` to highlight attack surfaces (paths crossing trust boundaries)
+- Nesting `[ ]` can represent security domains (DMZ, internal, external)
+- Label feedback paths that could be spoofed or tampered
+
+### Limitations
+
+Depict handles **structure**, not **threat analysis**. Trust boundaries, STRIDE mappings, and attack scenarios require separate tables or prose—depict shows the control structure those analyses reference.
+
+**Trust boundary workaround:** Use separate depict diagrams for each security domain, or use nesting `[ ]` to group elements within the same trust zone.
