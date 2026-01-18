@@ -181,3 +181,60 @@ Action + target + location. Example: "Removed unused `formatTimestamp` import (u
 - Impact (call sites affected)
 - Confidence level with reasoning
 - For blocked: attempted action, failure, analysis, recommendation
+
+## Delegation Design
+
+### Autonomy Boundaries
+
+| Situation | Agent Action |
+|-----------|--------------|
+| Low-Moderate simplification | Apply automatically |
+| Consolidation | Apply automatically, atomic commit, detailed summary |
+| Structural opportunity | Flag only, do not apply |
+| Consolidation conflict | Pause, ask for precedence decision |
+| Scope expansion needed | Escalate for discussion |
+| Deeper issue unaddressable | Surface as escalation in report |
+
+### When to Pause
+
+- Consolidation conflict detected (two changes affect same code)
+- Structural change identified (requires approval)
+- Final verification fails after all changes (requires investigation)
+
+### When to Escalate (in report)
+
+- Deeper issue found but exceeds simplification scope
+- Hidden coupling prevents safe change
+- Test infrastructure issues discovered
+
+## Integration
+
+### Pipeline Position
+
+Runs after verification-before-completion, before completion claim.
+
+```
+verify → simplify → re-verify → complete
+```
+
+### Entry
+
+Triggered automatically. Scope = files modified in current session.
+
+### Exit
+
+- Final verification must pass
+- Summary presented
+- Only then: completion claim allowed
+
+### Failure Mode
+
+If final verification fails after all simplifications:
+1. Revert to pre-simplification state
+2. Report what went wrong
+3. Require human intervention
+
+## References
+
+- @patterns-by-language.md - Language-specific pattern refinements
+- @failure-analysis.md - How to analyze test failures for deeper issues
