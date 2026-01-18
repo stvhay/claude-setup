@@ -72,3 +72,62 @@ Simplifications are categorized by risk. Lower risk = more autonomy.
 - Abstraction redesign
 - Architectural simplifications
 - Changes affecting multiple modules
+
+## Execution Loop
+
+Process simplifications incrementally, ordered by risk (low first).
+
+```
+FOR each simplification opportunity:
+
+  1. APPLY the change
+
+  2. VERIFY (run tests)
+
+  3. IF tests PASS:
+     - Keep the change
+     - Log summary (one-liner or detailed based on category)
+     - If consolidation: commit atomically with detailed message
+     - Continue to next
+
+  4. IF tests FAIL:
+     - ANALYZE the failure (see @failure-analysis.md):
+       • Brittle test? → Flag for test improvement
+       • Hidden coupling? → Flag as refactor opportunity
+       • Inconsistency revealed? → Attempt expanded fix
+
+     - If deeper issue found AND addressable within scope:
+       → Attempt to fix it
+       → Re-verify
+       → If still fails: revert all, log as BLOCKED, continue
+
+     - If deeper issue exceeds scope (architectural, multi-module):
+       → Revert change
+       → Log as ESCALATION
+       → Continue
+
+     - If no deeper issue identified:
+       → Revert change
+       → Log as SKIPPED with reason
+       → Continue
+
+AFTER all opportunities processed:
+  - Commit remaining low-moderate changes (grouped)
+  - Run final verification
+  - Present summary
+```
+
+### Consolidation Dependency Check
+
+Before applying each consolidation, verify it's still valid:
+
+1. Check if prior consolidations succeeded
+2. Check if this consolidation conflicts with prior changes
+3. If conflict detected: pause, show both, ask for precedence decision
+
+### Ordering Rationale
+
+Low-risk first because:
+- Banks easy wins before attempting riskier changes
+- Simpler changes are less likely to reveal deep issues
+- If a consolidation fails, low-risk changes are already applied
