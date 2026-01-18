@@ -180,7 +180,91 @@ digraph routing {
 
 ## Causal Scenario Diagrams
 
-[Content in Task 4]
+Show how unsafe control actions lead to hazards through causal paths.
+
+### Conventions
+
+**Layout:** `rankdir=LR` (left-to-right causal flow: cause → effect)
+
+**Node Shapes:**
+
+| Concept | DOT Shape | Attributes |
+|---------|-----------|------------|
+| UCA (unsafe control action) | `box` | `shape=box style=filled fillcolor=lightyellow` |
+| Causal factor | `box, rounded` | `shape=box style=rounded` |
+| Hazard | `octagon` | `shape=octagon style=filled fillcolor=lightcoral` |
+| Loss | `doubleoctagon` | `shape=doubleoctagon style=filled fillcolor=red fontcolor=white` |
+
+**Subgraphs:** Use `cluster_` prefix to group related causal factors by category.
+
+### Example: Causal Scenario Chain
+
+```dot
+digraph causal_scenario {
+    rankdir=LR;
+    node [fontname="Arial" fontsize=10];
+    edge [fontname="Arial" fontsize=9];
+
+    // Unsafe Control Action
+    uca1 [shape=box style=filled fillcolor=lightyellow
+          label="UCA-1:\nBrake not applied\nwhen obstacle detected"];
+
+    // Causal factors (grouped)
+    subgraph cluster_feedback {
+        label="Feedback Failures";
+        style=dashed;
+        cf1 [shape=box style=rounded label="Sensor\noccluded"];
+        cf2 [shape=box style=rounded label="Detection\ndelayed"];
+    }
+
+    subgraph cluster_model {
+        label="Process Model Flaws";
+        style=dashed;
+        cf3 [shape=box style=rounded label="Obstacle not\nin model"];
+    }
+
+    // Hazard
+    h1 [shape=octagon style=filled fillcolor=lightcoral
+        label="H-1:\nVehicle enters\noccupied space"];
+
+    // Loss
+    l1 [shape=doubleoctagon style=filled fillcolor=red fontcolor=white
+        label="L-1:\nCollision"];
+
+    // Causal flow
+    cf1 -> cf2 [label="causes"];
+    cf2 -> cf3 [label="leads to"];
+    cf3 -> uca1 [label="results in"];
+    uca1 -> h1 [label="creates"];
+    h1 -> l1 [label="leads to"];
+}
+```
+
+### Example: Multiple UCAs to Single Hazard
+
+```dot
+digraph multi_uca {
+    rankdir=LR;
+    node [fontname="Arial" fontsize=10];
+
+    // Multiple UCAs
+    uca1 [shape=box style=filled fillcolor=lightyellow label="UCA-1:\nAlarm not provided"];
+    uca2 [shape=box style=filled fillcolor=lightyellow label="UCA-2:\nShutdown too late"];
+    uca3 [shape=box style=filled fillcolor=lightyellow label="UCA-3:\nWrong valve opened"];
+
+    // Converging hazard
+    h1 [shape=octagon style=filled fillcolor=lightcoral label="H-1:\nOverpressure"];
+
+    // Loss
+    l1 [shape=doubleoctagon style=filled fillcolor=red fontcolor=white label="L-1:\nExplosion"];
+
+    // Paths
+    uca1 -> h1;
+    uca2 -> h1;
+    uca3 -> h1;
+    h1 -> l1;
+}
+```
 
 ## Common Patterns
 
