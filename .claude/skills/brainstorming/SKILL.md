@@ -32,6 +32,34 @@ Start by understanding the current project context, then ask questions one at a 
 - Cover: architecture, components, data flow, error handling, testing
 - Be ready to go back and clarify if something doesn't make sense
 
+## Evaluating UX Design Need
+
+After validating the design direction, evaluate whether detailed UX design is needed:
+
+**Recommend ux-design-agent when:**
+- User-facing interface (GUI, CLI, voice)
+- Agentic system (AI takes actions on user's behalf)
+- User model isn't obvious ("who uses this and how?")
+- Complex interaction flows (onboarding, wizards, multi-step)
+
+**Skip to writing-plans when:**
+- Internal tooling (user model is "us")
+- Simple feature with obvious interaction
+- Backend/infrastructure work
+
+**Ask explicitly:**
+> "This involves [user-facing interface / agentic behavior / complex interaction].
+> Would you like detailed UX design (requirements, user model, modality selection)?
+> Or proceed directly to implementation planning?"
+
+**If yes:**
+- **REQUIRED SUB-SKILL:** Use ux-design-agent
+- ux-design-agent will produce structured requirements
+- Then continue to writing-plans
+
+**If no:**
+- Proceed to writing-plans with current design document
+
 ## After the Design
 
 **Documentation:**
