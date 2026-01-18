@@ -125,11 +125,11 @@ When incident response or compliance deadline is tight:
 
 ## Theoretical Foundation
 
-CAST is built on STAMP (Systems-Theoretic Accident Model and Processes). See [references/stamp-foundations.md](references/stamp-foundations.md) for the core theoretical framework: why accidents emerge from inadequate control rather than component failures, the four conditions for safe control, and why "human error" is a symptom not a cause.
+CAST is built on STAMP (Systems-Theoretic Accident Model and Processes). See stamp-base for the core theoretical framework: why accidents emerge from inadequate control rather than component failures, the four conditions for safe control, and why "human error" is a symptom not a cause.
 
-For common pitfalls in traditional accident investigation—root cause seduction, hindsight bias, blame—see [references/investigation-pitfalls.md](references/investigation-pitfalls.md).
-
-For worked examples demonstrating the methodology, see [references/examples.md](references/examples.md) (medication error, water contamination, industrial fall).
+For CAST-specific methodology:
+- [references/investigation-pitfalls.md](references/investigation-pitfalls.md) - Root cause seduction, hindsight bias, blame
+- [references/examples.md](references/examples.md) - Worked examples (medication error, water contamination, industrial fall)
 
 ## Core Principles
 
@@ -318,7 +318,10 @@ Use the control structure diagram (in depict notation—see Depict Syntax below)
 
 ## Related
 
-**RELATED:** For prospective hazard analysis to prevent future losses (before accidents occur), see stamp-stpa
+**RELATED SKILLS:**
+- stamp-base — Theoretical foundations and routing
+- stamp-stpa — Prospective hazard analysis (before accidents occur)
+- stamp-stpa-sec — Security/adversarial analysis
 
 ## Depict Syntax
 

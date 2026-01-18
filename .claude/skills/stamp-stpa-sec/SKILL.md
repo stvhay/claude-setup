@@ -285,9 +285,10 @@ Particularly valuable for:
 
 ## Related
 
-**RELATED:** For safety-focused prospective analysis without adversarial scenarios, see stamp-stpa
-
-**RELATED:** For retrospective analysis of security incidents, see stamp-cast
+**RELATED SKILLS:**
+- stamp-base — Theoretical foundations and routing
+- stamp-stpa — Safety-focused prospective analysis (without adversarial scenarios)
+- stamp-cast — Retrospective analysis (including security incidents)
 
 ## Depict Syntax
 

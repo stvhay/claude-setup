@@ -221,13 +221,17 @@ When examining any system, process, organization, or failure:
 
 ## Methodology References
 
-For detailed application, see:
-- [references/stamp-foundations.md](references/stamp-foundations.md) - Core theoretical framework and accident causation model
+**Foundations:** See stamp-base for theoretical framework (paradigm shift, control structures, four conditions for safe control).
+
+For STPA-specific methodology:
 - [references/stpa-methodology.md](references/stpa-methodology.md) - Step-by-step STPA hazard analysis procedure
 - [references/examples.md](references/examples.md) - Worked examples (ACC, PCA pump, autonomous vehicle)
 - [references/traditional-methods-critique.md](references/traditional-methods-critique.md) - Why fault trees, event chains, and Swiss cheese models are inadequate
 
-**RELATED SKILL:** For security/adversarial analysis, see stamp-stpa-sec
+**RELATED SKILLS:**
+- stamp-base — Theoretical foundations and routing
+- stamp-cast — Retrospective incident analysis
+- stamp-stpa-sec — Security/adversarial analysis
 
 ## Analysis Output Pattern
 
@@ -259,7 +263,10 @@ Do not be preachy, but be consistent. Every system failure discussion is an oppo
 
 ## Related
 
-**RELATED:** For retrospective accident analysis after a loss occurs, see stamp-cast
+**RELATED SKILLS:**
+- stamp-base — Theoretical foundations and routing
+- stamp-cast — Retrospective accident analysis (after a loss occurs)
+- stamp-stpa-sec — Security/adversarial analysis
 
 ## Depict Syntax
 
