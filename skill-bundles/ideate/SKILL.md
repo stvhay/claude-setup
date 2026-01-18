@@ -1,82 +1,109 @@
 ---
 name: ideate
-description: "Collaborative ideation and requirements discovery. Use when user wants to explore ideas, brainstorm features, clarify requirements, discuss design choices, or asks open-ended 'what if' / 'how should we' / 'I'm thinking about' questions."
+description: "Divergent exploration of fuzzy problem spaces. Use when problem is unclear, multiple large directions exist, or user wants to generate ideas without committing to a design."
 ---
 
 # Ideate
 
-Collaborative thinking for exploring ideas, clarifying requirements, and working through design decisions before implementation.
+Divergent exploration for fuzzy problem spaces. Generates a network of idea artifacts that can later feed into brainstorming-design.
 
 ## When to Activate
 
 **Full ideation session:**
-- User explicitly wants to brainstorm or explore
-- New feature with unclear requirements
-- Design decision with multiple valid approaches
-- "Let's think through..." or "I'm considering..."
+- Problem space is fuzzy - need discovery to find its shape
+- Multiple large-scope directions exist - need to sketch several before committing
+- "I'm thinking about...", "What if we...", "I have some ideas about..."
+- User explicitly wants to explore without designing yet
 
-**Light mode (quick exploration):**
-- Small open-ended questions: "what's the best way to...", "should we..."
-- Clarifying a single decision point
-- Quick trade-off discussion
-
-For light mode: skip the formal process, have a brief back-and-forth, summarize the decision, and move on. Don't create IDEATE.md for small questions.
+**Light mode (quick capture):**
+- Single idea to capture quickly
+- Brief exploration of one problem/opportunity
+- For light mode: have a quick back-and-forth, capture to a single idea file, done
 
 ## Process (Full Session)
 
-1. **Understand** - Ask questions to understand the idea:
-   - What problem are you trying to solve?
-   - What does success look like?
-   - What constraints exist?
+1. **Explore** - Understand the problem space:
+   - What's the opportunity or pain point?
+   - What's unclear or unknown?
+   - What constraints exist (if any are known)?
 
-2. **Explore** - Investigate the codebase if relevant:
-   - How does this relate to existing code?
-   - What patterns already exist?
-   - What would need to change?
+2. **Generate** - Surface multiple directions:
+   - Encourage divergent thinking - quantity over quality initially
+   - Each distinct problem/opportunity becomes its own idea
+   - Don't evaluate or pick winners yet
 
-3. **Surface Decisions** - Identify choices that need to be made:
-   - Present options with trade-offs
-   - Ask for user preference
-   - Note dependencies between decisions
+3. **Connect** - Identify relationships:
+   - Which ideas inform or depend on others?
+   - Which are alternatives to each other?
+   - Capture links between related ideas
 
-4. **Capture** - Document the outcome in `IDEATE.md`
+4. **Capture** - Write idea files with appropriate status
 
 ## Conversation Style
 
-- Ask one question at a time when possible
-- Summarize understanding before moving forward
-- Be direct about what you don't understand
-- Offer concrete options rather than open-ended "what do you think?"
-- For light mode: be concise, get to the point quickly
+- Ask one question at a time
+- Encourage exploration, not decisions
+- "What else?" and "Tell me more" over "Which one?"
+- Summarize what you're hearing before writing files
+- For light mode: be concise, capture quickly
 
-## Output (Full Session)
+## Output Format
 
-When ideation concludes, update or create `IDEATE.md`:
+Files at: `docs/{date}-{slug}-idea-{status}.md`
 
-```markdown
-# Ideation: [Topic]
+Status levels:
+- `raw` - Just captured, minimal structure
+- `refined` - Clear problem/opportunity statement, could benefit from more ideation
+- `actionable` - Ready for brainstorming-design
 
-## Summary
-[1-3 sentences describing the idea]
-
-## Decisions Made
-- [Decision 1]: [Choice] - [Rationale]
-- [Decision 2]: [Choice] - [Rationale]
-
-## Open Questions
-- [ ] Question that still needs answering
-
-## Next Steps
-- [ ] Concrete action if proceeding
+Example:
+```
+docs/2026-01-18-caching-layer-idea-raw.md
+docs/2026-01-18-api-redesign-idea-refined.md
+docs/2026-01-18-dashboard-rethink-idea-actionable.md
 ```
 
-## Transition to Implementation
+## Idea File Content
 
-Do NOT start implementing unless explicitly asked. This is for thinking, not building.
+Minimal - only what emerged:
 
-Once user indicates session is done and they want to proceed:
-1. Ensure IDEATE.md captures the decisions
-2. Pass summary to `code-architect` agent
-3. Enter planning mode per CLAUDE.md instructions
+```markdown
+# Idea: [Short Name]
 
-If architect feedback is already available, go straight to plan mode.
+## Problem/Opportunity
+[The core insight - might be all there is]
+
+## Context
+[Optional - constraints, related systems, user needs if they emerged]
+
+## Open Questions
+[Optional - things to explore further]
+
+Related: [[other-idea-filename]]
+```
+
+Context and Open Questions are optional. Sometimes you're in unknown-unknowns territory.
+
+## Session End
+
+User-determined. When they indicate done, summarize:
+
+> "This session produced 5 ideas: 2 raw, 2 refined, 1 actionable"
+
+No minimum requirements.
+
+## What Ideate Does NOT Do
+
+- Make design decisions
+- Pick which direction to pursue
+- Automatically hand off to brainstorming
+- Produce implementation details
+
+## Handoff to Brainstorming
+
+Manual. When user is ready to design one of the ideas:
+1. They invoke brainstorming-design
+2. They reference the actionable idea file
+3. Brainstorming reads it + linked ideas for context, then designs
+
+Do NOT start designing unless user explicitly moves to brainstorming.

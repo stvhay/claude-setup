@@ -11,10 +11,18 @@ Help turn ideas into fully formed designs and specs through natural collaborativ
 
 Start by understanding the current project context, then ask questions one at a time to refine the idea. Once you understand what you're building, present the design in small sections (200-300 words), checking after each section whether it looks right so far.
 
+## Prior Ideation
+
+If user references an idea file (`docs/*-idea-*.md`) or mentions prior ideation:
+- Read the referenced idea file
+- Follow any `Related: [[...]]` links to gather context from connected ideas
+- Use this context to skip or shorten discovery - the problem/opportunity is already captured
+
 ## The Process
 
 **Understanding the idea:**
 - Check out the current project state first (files, docs, recent commits)
+- If prior ideation exists, start from that context
 - Ask questions one at a time to refine the idea
 - Prefer multiple choice questions when possible, but open-ended is fine too
 - Only one question per message - if a topic needs more exploration, break it into multiple questions
