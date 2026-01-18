@@ -1,6 +1,6 @@
 ---
 name: stamp-stpa
-description: Use when discussing system failures, accidents, near-misses, safety analysis, risk assessment, root cause analysis, human error attribution, or complex systems where failure modes matter. Also use when seeing terms like hazard analysis, fault tree, Swiss cheese, defense in depth, or probabilistic risk assessment.
+description: Use when designing systems and analyzing what could go wrong before it happens. Triggers include safety analysis, hazard analysis, risk assessment, security threat modeling, or reviewing existing systems for vulnerabilities. Also use when someone mentions fault trees, Swiss cheese, or probabilistic risk assessment—to offer the control-theoretic alternative.
 ---
 
 # STAMP/STPA Systems Safety Analysis
@@ -8,6 +8,170 @@ description: Use when discussing system failures, accidents, near-misses, safety
 ## Overview
 
 STAMP (Systems-Theoretic Accident Model and Processes) reframes safety: accidents emerge from inadequate control of system behavior, not from chains of component failures. Instead of asking "what broke?", ask "what constraints were missing or inadequate?"
+
+## When to Use
+
+```dot
+digraph routing {
+    rankdir=TB;
+
+    entry [label="Safety/failure\nconcern raised" shape=ellipse];
+    timing [label="Has loss already\noccurred?" shape=diamond];
+    security [label="Adversarial\nthreat?" shape=diamond];
+
+    cast [label="Use stamp-cast\n(retrospective)" shape=box style=filled fillcolor=lightgray];
+    stpa [label="Use STPA\n(this skill)" shape=box style=filled fillcolor=lightgreen];
+    stpasec [label="Use stamp-stpa-sec\n(security)" shape=box style=filled fillcolor=lightblue];
+
+    entry -> timing;
+    timing -> cast [label="yes"];
+    timing -> security [label="no"];
+    security -> stpasec [label="yes"];
+    security -> stpa [label="no"];
+}
+```
+
+| Entry Point | Route To | Why |
+|-------------|----------|-----|
+| "I'm designing X, what could go wrong?" | STPA | Prospective hazard analysis |
+| "Review this system for safety issues" | STPA | Prospective, existing system |
+| "Something failed / went wrong" | CAST | Retrospective incident analysis |
+| "What was the root cause?" | CAST | Retrospective (will reframe "root cause") |
+| "Security threats to this system" | stamp-stpa-sec | Prospective with adversarial scenarios |
+| "Why do they use fault trees here?" | STPA | Offer control-theoretic alternative |
+| "I'm building X, what causes failures in similar systems?" | STPA | Prospective with retrospective context (see below) |
+
+**When ambiguous:** Ask one question:
+> "Are we analyzing something that already happened, or preventing something that might happen?"
+
+## Agentic Behavior
+
+### Checkpoints
+
+Pause and ask when:
+
+| Situation | Ask |
+|-----------|-----|
+| System boundary unclear | "Should I include [X] in the control structure, or is it outside our scope?" |
+| Missing control information | "What sensors/feedback exist for [process]?" |
+| Multiple valid framings | "I could model this as [A] or [B]—which fits your mental model?" |
+| Methodology ambiguity | "This could be prospective analysis or incident investigation—which are we doing?" |
+
+**Don't** checkpoint after every STPA step. Pause on uncertainty, not ritual.
+
+### Hybrid Retrospective/Prospective Queries
+
+When users want to "learn from past failures while designing new systems":
+
+1. **Stay in STPA** (prospective) as the primary mode
+2. **Use domain knowledge** of past failures to inform hazard identification
+3. **Don't switch to CAST** unless analyzing a specific incident in depth
+
+Example response:
+> "I'll use STPA for your new design. To inform the hazard analysis, I'll draw on known failure patterns in similar systems—but we're focused on preventing hazards in *your* design, not investigating past incidents."
+
+### Framing Conflicts
+
+When users bring traditional safety framing, surface the tension:
+
+| User Says | Response Pattern |
+|-----------|------------------|
+| "What's the root cause?" | "STAMP rejects single root causes—accidents are multifactorial. Want me to identify the control structure gaps instead?" |
+| "It was human error" | "STAMP treats human error as symptom, not cause. What in the system made that error likely?" |
+| "We need more barriers" | "New barriers degrade for the same reasons old ones did. Want to analyze why existing controls failed first?" |
+| "Calculate the failure probability" | "Human and software behavior aren't random variables. Want to map the control structure instead?" |
+
+**Don't** silently override the user's framing. Name the conflict, offer the alternative, let them choose.
+
+### Time Pressure
+
+When users have hard deadlines:
+
+| Time Available | Minimum Viable STPA |
+|----------------|---------------------|
+| 30 minutes | Control structure sketch + top 3 hazards + key UCAs |
+| 2 hours | Full Step 1-3 (losses, hazards, control structure, UCAs) |
+| Half day | Complete STPA with causal scenarios and requirements |
+
+> "With [X time], I can give you [minimum viable output]. Want that, or should we scope down the system boundary?"
+
+### Sunk Cost and Authority Pressure
+
+| User Says | Response Pattern |
+|-----------|------------------|
+| "I already spent [time] on fault tree/traditional analysis" | "I can help you reframe that work through a STAMP lens—you keep the domain knowledge but get systemic insight. Want me to show you how?" |
+| "My [boss/board/regulator] needs [probability/root cause]" | "I can give you something more defensible: control structure gaps and specific recommendations. Probabilities get questioned; causal analysis holds up." |
+| "Just give me the number/answer" | "The honest answer is: there's no single number or root cause. But I can give you the 3-4 control gaps that matter most. That's more actionable." |
+
+### Skill Handoffs
+
+**To CAST** — If analysis reveals a past incident worth investigating:
+> "This looks like there's a specific incident behind this concern. Want me to switch to CAST for retrospective analysis?"
+
+**To stamp-stpa-sec** — If adversarial threats emerge during analysis:
+> "I'm noticing security concerns—intentional attacks on [control path/feedback]. Want me to switch to STPA-Sec for adversarial scenarios?"
+
+## Output Schema
+
+When producing STPA analysis, structure output for machine parsing:
+
+```yaml
+stpa_analysis:
+  system:
+    name: string
+    boundary: string
+    losses:
+      - id: L-1
+        description: string
+    hazards:
+      - id: H-1
+        description: string
+        losses: [L-1]
+
+  control_structure:
+    controllers:
+      - id: string
+        type: human | automated
+        controls: [process_ids]
+        feedback_from: [process_ids]
+    processes:
+      - id: string
+        description: string
+    control_actions:
+      - from: controller_id
+        to: process_id
+        action: string
+    feedback_paths:
+      - from: process_id
+        to: controller_id
+        information: string
+
+  unsafe_control_actions:
+    - id: UCA-1
+      controller: controller_id
+      type: not_provided | provided | wrong_timing | wrong_duration
+      action: string
+      context: string
+      hazards: [H-1]
+
+  causal_scenarios:
+    - uca: UCA-1
+      scenario: string
+      category: feedback | process_model | control_path | algorithm
+
+  safety_requirements:
+    - id: SR-1
+      requirement: string
+      addresses: [UCA-1]
+      verification: string
+```
+
+Use this schema when:
+- Handing off to another agent
+- Storing analysis for later reference
+- Producing machine-actionable outputs
+
+For human-readable output, use the prose format in "Analysis Output Pattern" below.
 
 ## Quick Reference
 
@@ -60,7 +224,10 @@ When examining any system, process, organization, or failure:
 For detailed application, see:
 - [references/stamp-foundations.md](references/stamp-foundations.md) - Core theoretical framework and accident causation model
 - [references/stpa-methodology.md](references/stpa-methodology.md) - Step-by-step STPA hazard analysis procedure
+- [references/examples.md](references/examples.md) - Worked examples (ACC, PCA pump, autonomous vehicle)
 - [references/traditional-methods-critique.md](references/traditional-methods-critique.md) - Why fault trees, event chains, and Swiss cheese models are inadequate
+
+**RELATED SKILL:** For security/adversarial analysis, see stamp-stpa-sec
 
 ## Analysis Output Pattern
 
@@ -89,3 +256,7 @@ Do not be preachy, but be consistent. Every system failure discussion is an oppo
 | Adding barriers without understanding why existing ones failed | New barriers degrade for the same reasons old ones did |
 | Static analysis of dynamic systems | Systems migrate toward hazard over time—analyze the drift |
 | Assigning probabilities to human/software behavior | These aren't random variables—trace the control structure instead |
+
+## Related
+
+**RELATED:** For retrospective accident analysis after a loss occurs, see stamp-cast

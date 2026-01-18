@@ -64,16 +64,37 @@ For each control action, systematically examine four types of unsafe control:
 | Wrong timing/order | Can the action be hazardous if taken too early, too late, or out of sequence? |
 | Wrong duration | Can the action be hazardous if stopped too soon or applied too long? |
 
+### UCA Structure
+
+Every Unsafe Control Action has four parts:
+
+| Part | Description | Example |
+|------|-------------|---------|
+| **Source Controller** | The controller that provides (or should provide) the action | Driver, ACC, Pilot, Software Controller |
+| **Type** | Whether action is provided, not provided, or has timing/duration issues | does not provide, provides, provides too late |
+| **Control Action** | The specific command or action | brake command, Park cmd, go-around |
+| **Context** | Conditions that make this action (or lack of action) hazardous | when obstacle ahead, before exiting vehicle, when unstabilized |
+
+Plus **traceability** to the hazard it can cause: `[H-1]`
+
 ### UCA Format
 
-Document each UCA clearly:
+Document each UCA using the four-part structure:
 ```
-UCA-[ID]: [Controller] [does/does not] [control action] when [context], leading to [hazard]
+UCA-[ID]: [Source Controller] [Type] [Control Action] when [Context] [Hazard]
 ```
 
 Example:
 ```
-UCA-1: Flight crew does not initiate go-around when aircraft is unstabilized below 1000 feet, leading to H-1 (controlled flight into terrain)
+UCA-1: Flight crew does not initiate go-around when aircraft is unstabilized below 1000 feet [H-1]
+        └─Controller─┘ └──Type──┘ └──Control Action──┘ └────────────Context────────────────┘
+```
+
+More examples:
+```
+UCA-2: Driver does not provide Park cmd before exiting vehicle on slope [H-2]
+UCA-3: ACC provides brake command when road is clear and no obstacle ahead [H-3]
+UCA-4: Pump delivers dose too early, before lockout period expires [H-1]
 ```
 
 ### Context Matters
@@ -87,7 +108,56 @@ Analyze across operational modes, system states, and environmental conditions.
 
 ## Step 3: Identify Causal Scenarios
 
-For each UCA, trace the reasons it could occur. Use the STAMP causal categories:
+For each UCA, trace the reasons it could occur. The causal scenario diagram below shows all paths that can lead to unsafe control:
+
+```
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                              CONTROLLER                                          │
+│  ┌─────────────────────────────────────────────────────────────────────────┐    │
+│  │ Inadequate Control Algorithm                                             │    │
+│  │ • Flaws in creation, modification, adaptation                           │    │
+│  │ • Software/logic errors                                                  │    │
+│  │ • Inadequate safety margins                                              │    │
+│  └─────────────────────────────────────────────────────────────────────────┘    │
+│  ┌─────────────────────────────────────────────────────────────────────────┐    │
+│  │ Process Model Inconsistent with Process                                  │    │
+│  │ • Incorrect beliefs about:                                               │    │
+│  │   - Current process state         - Required vs actual control action   │    │
+│  │   - How process is changing       - How process behaves                 │    │
+│  │ • Flaw in model update: never received, incorrect, not sent, delayed    │    │
+│  └─────────────────────────────────────────────────────────────────────────┘    │
+└───────────────────────────────────┬─────────────────────────────────────────────┘
+                                    │
+                                    │ Control Actions
+                                    ▼
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│ Control path issues:                                                             │
+│ • Inadequate operation (action not executed, incorrectly executed)              │
+│ • Inappropriate, missing, or delayed communication                               │
+│ • Conflicts (multiple controllers sending conflicting commands)                  │
+└───────────────────────────────────┬─────────────────────────────────────────────┘
+                                    │
+                                    ▼
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                          CONTROLLED PROCESS                                      │
+│                                                                                  │
+│ Component failures, changes over time, unhandled disturbances                   │
+└───────────────────────────────────┬─────────────────────────────────────────────┘
+                                    │
+                                    │ Feedback
+                                    ▼
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│ Feedback path issues:                                                            │
+│ • Sensor failure or incorrect sensor operation                                   │
+│ • Inadequate sensor (wrong type, range, resolution)                             │
+│ • Missing feedback (no sensor, feedback not sent)                               │
+│ • Delayed feedback                                                               │
+│ • Measurement inaccuracies                                                       │
+│ • Feedback corrupted or modified                                                 │
+└─────────────────────────────────────────────────────────────────────────────────┘
+```
+
+Use the STAMP causal categories:
 
 ### Why Might a Needed Control Action Not Be Taken?
 
