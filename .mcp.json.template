@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "google-workspace": {
+      "command": ".claude/bin/workspace-server",
+      "env": {
+        "GOOGLE_CLIENT_ID": "xxxxxxxxxxxxxxxxxxxxxxx.apps.googleusercontent.com",
+        "GOOGLE_CLIENT_SECRET": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      }
+    },
+    "devrag": {
+      "type": "stdio",
+      "command": "./.claude/scripts/run-devrag.sh"
+    }
+  }
+}
