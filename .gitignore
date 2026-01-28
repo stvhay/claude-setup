@@ -2,3 +2,5 @@
 .worktrees/
 dist/
 .mcp.json
+.claude/var/*
+.claude/etc/*.json
